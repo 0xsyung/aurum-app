@@ -32,14 +32,14 @@
     "vite": "^7.3.1"
   },
   "dependencies": {
-    "@coinbase/onchainkit": "^1.1.2",
+    "@coinbase/onchainkit": "^0.30.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/react-query": "^5.90.20",
     "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
     "react-router-dom": "^6.28.0",
     "tailwind-merge": "^3.4.0",
-    "viem": "^1.21.0",
-    "wagmi": "^2.16"
+    "viem": "^2.13.0",
+    "wagmi": "^2.19"
   }
 }
