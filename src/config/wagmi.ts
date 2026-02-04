@@ -9,7 +9,8 @@ export const config = createConfig({
   connectors: [
     coinbaseWallet({
       appName: 'Aurum',
-      preference: 'smartWalletOnly', // Use Smart Wallet by default
+      // preference: 'smartWalletOnly', // Use Smart Wallet by default
+      preference: 'all',
     }),
   ],
   transports: {
