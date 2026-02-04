@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
   pull_request:
     branches:
       - main
@@ -57,35 +58,12 @@ jobs:
           path: dist/
           retention-days: 1
 
-  # Deploy to Cloudflare Pages (only on main branch push)
-  deploy-cloudflare:
-    name: Deploy to Cloudflare Pages
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    permissions:
-      contents: read
-      deployments: write
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=aurum-app
-
-  # Alternative: Deploy to GitHub Pages
+  # Deploy to GitHub Pages (develop branch - testing/demo)
   deploy-github-pages:
-    name: Deploy to GitHub Pages
+    name: Deploy to GitHub Pages (Testing/Demo)
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_TARGET == 'github-pages'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     permissions:
       contents: read
       pages: write
@@ -111,3 +89,26 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Deploy to Cloudflare Pages (main branch - production)
+  deploy-cloudflare:
+    name: Deploy to Cloudflare Pages (Production)
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=aurum-app

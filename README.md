@@ -95,39 +95,70 @@ npm run preview
 
 ### Automatic Deployment (GitHub Actions)
 
-This repository is configured with GitHub Actions for automatic deployment:
+This repository is configured with GitHub Actions for automatic deployment to two environments:
 
-1. **On Push to `main`**: Automatically builds and deploys to Cloudflare Pages
-2. **On Pull Request**: Runs build checks to ensure code compiles
+| Branch | Environment | Use Case | URL |
+|--------|-------------|----------|-----|
+| `develop` | GitHub Pages | Testing & Demo | `https://0xsyung.github.io/aurum-app` |
+| `main` | Cloudflare Pages | Production | `https://aurum-app.pages.dev` |
 
-#### Setup Cloudflare Deployment
+#### Deployment Flow
 
-1. Create a Cloudflare Pages project named `aurum-app`
-2. Add the following secrets to your GitHub repository:
-   - `CLOUDFLARE_API_TOKEN` - Your Cloudflare API token
-   - `CLOUDFLARE_ACCOUNT_ID` - Your Cloudflare account ID
-   - `VITE_WALLETCONNECT_PROJECT_ID` - WalletConnect project ID
+```
+Feature Branch → develop (GitHub Pages) → main (Cloudflare Pages)
+     ↓              ↓                          ↓
+  CI Checks   Testing/Demo              Production
+```
 
-3. Add the following variables to your GitHub repository:
-   - `VITE_CHAIN_ID` - Chain ID (84532 for Base Sepolia)
-   - `VITE_RPC_URL` - RPC URL
-   - `VITE_MARKET_FACTORY_ADDRESS` - Contract address
-   - `VITE_AURUM_ORACLE_ADDRESS` - Contract address
-   - `VITE_AURUM_TOKEN_ADDRESS` - Contract address
-   - `VITE_CONDITIONAL_TOKENS_ADDRESS` - Contract address
-   - `VITE_FEE_COLLECTOR_ADDRESS` - Contract address
+### Setup Instructions
 
-#### Alternative: GitHub Pages
+#### 1. GitHub Pages Setup (Testing/Demo)
 
-Set the repository variable `DEPLOY_TARGET=github-pages` to deploy to GitHub Pages instead.
+1. Go to **Repository Settings → Pages**
+2. Select **GitHub Actions** as the source
+3. Enable GitHub Pages
+
+**No additional secrets needed** - GitHub Pages deployment is automatic on `develop` branch push.
+
+#### 2. Cloudflare Pages Setup (Production)
+
+1. Create a Cloudflare Pages project:
+   - Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
+   - Navigate to **Workers & Pages → Create → Pages**
+   - Create project named `aurum-app`
+   - Skip initial deployment (GitHub Actions will handle it)
+
+2. Add GitHub Secrets:
+   - `CLOUDFLARE_API_TOKEN` - [Get from Cloudflare](https://dash.cloudflare.com/?to=/:account/profile/api-tokens)
+   - `CLOUDFLARE_ACCOUNT_ID` - Found in Cloudflare dashboard sidebar
+   - `VITE_WALLETCONNECT_PROJECT_ID` - [Get from WalletConnect](https://cloud.walletconnect.com)
+
+3. Add GitHub Variables:
+   - `VITE_CHAIN_ID` - `84532`
+   - `VITE_RPC_URL` - `https://sepolia.base.org`
+   - `VITE_MARKET_FACTORY_ADDRESS` - `0xaF8ddE93C551ce4f6A21db07508858Fb15E4bbC9`
+   - `VITE_AURUM_ORACLE_ADDRESS` - `0x4EC0295F0344ac264EB83bd7bDb0069015702297`
+   - `VITE_AURUM_TOKEN_ADDRESS` - `0xdBfa3D8516C49581e2A6cBbD75F02F24c59811c1`
+   - `VITE_CONDITIONAL_TOKENS_ADDRESS` - `0x9A7A037469204604C29a44901b69B0bBB1d45B13`
+   - `VITE_FEE_COLLECTOR_ADDRESS` - `0xBCC8aC562085E207460B9a0342d62a480DD9caAC`
 
 ### Manual Deployment
 
-#### Cloudflare Pages
+#### Cloudflare Pages (Production)
 
 ```bash
 npm run build
 npx wrangler pages deploy dist --project-name=aurum-app
+```
+
+#### GitHub Pages (Testing)
+
+```bash
+npm run build
+# Push to develop branch
+git add dist/
+git commit -m "Deploy to GitHub Pages"
+git push origin develop
 ```
 
 #### Vercel
