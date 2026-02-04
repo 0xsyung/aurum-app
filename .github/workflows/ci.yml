@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - develop
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  lint-and-typecheck:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        run: npm run build
+        env:
+          # Use default testnet values for CI builds
+          VITE_CHAIN_ID: '84532'
+          VITE_RPC_URL: 'https://sepolia.base.org'
+          VITE_MARKET_FACTORY_ADDRESS: '0xaF8ddE93C551ce4f6A21db07508858Fb15E4bbC9'
+          VITE_AURUM_ORACLE_ADDRESS: '0x4EC0295F0344ac264EB83bd7bDb0069015702297'
+          VITE_AURUM_TOKEN_ADDRESS: '0xdBfa3D8516C49581e2A6cBbD75F02F24c59811c1'
+          VITE_CONDITIONAL_TOKENS_ADDRESS: '0x9A7A037469204604C29a44901b69B0bBB1d45B13'
+          VITE_FEE_COLLECTOR_ADDRESS: '0xBCC8aC562085E207460B9a0342d62a480DD9caAC'
+
+      - name: Check build output
+        run: |
+          echo "Build output:"
+          ls -la dist/
+          echo "Total size:"
+          du -sh dist/
