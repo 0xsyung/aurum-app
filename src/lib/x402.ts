@@ -9,6 +9,7 @@ const chain = chainId === base.id ? base : baseSepolia
 
 const maxValueEnv = import.meta.env.VITE_X402_MAX_USDC as string | undefined
 const maxValue = maxValueEnv ? parseUnits(maxValueEnv, 6) : undefined
+type X402Signer = Parameters<typeof wrapFetchWithPayment>[1]
 
 export function useX402Fetch() {
   const { wallets, ready } = useWallets()
@@ -28,7 +29,7 @@ export function useX402Fetch() {
         transport: custom(provider),
       })
 
-      const paidFetch = wrapFetchWithPayment(fetch, walletClient as unknown, maxValue)
+      const paidFetch = wrapFetchWithPayment(fetch, walletClient as unknown as X402Signer, maxValue)
       const requestInfo = input instanceof URL ? input.toString() : input
       return paidFetch(requestInfo, init)
     },
