@@ -25,7 +25,7 @@ npm run dev
 
 ## Environment Variables
 
-`.env.example` includes chain config and contract addresses for future wiring, but they are not used by the app yet. Privy requires `VITE_PRIVY_APP_ID`.
+`.env.example` includes chain config and contract addresses for future wiring, but they are not used by the app yet. Privy requires `VITE_PRIVY_APP_ID`. x402 uses `VITE_X402_MAX_USDC` as a per-request cap.
 
 ## Deployment
 
