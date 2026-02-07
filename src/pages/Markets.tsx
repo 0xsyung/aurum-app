@@ -1,8 +1,9 @@
+// Markets list page with search, filters, and mock data.
 import { useState } from 'react'
 import { MarketCard, Market } from '@/components/market/MarketCard'
 import { Search, Filter, TrendingUp, Clock, Flame } from 'lucide-react'
 
-// Mock data for demonstration
+// Mock data for demonstration (replace with API data later).
 const MOCK_MARKETS: Market[] = [
   {
     id: '1',
@@ -72,7 +73,9 @@ const MOCK_MARKETS: Market[] = [
   },
 ]
 
+// UI filter categories.
 const CATEGORIES = ['All', 'Crypto', 'Economics', 'Technology', 'Science', 'Sports', 'Politics']
+// UI sort options (not implemented yet).
 const SORT_OPTIONS = [
   { value: 'volume', label: 'Volume', icon: TrendingUp },
   { value: 'ending', label: 'Ending Soon', icon: Clock },
@@ -80,11 +83,12 @@ const SORT_OPTIONS = [
 ]
 
 export function Markets() {
+  // Local UI state for filters.
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [sortBy, setSortBy] = useState('volume')
 
-  // Filter markets based on search and category
+  // Filter markets based on search and category.
   const filteredMarkets = MOCK_MARKETS.filter((market) => {
     const matchesSearch = market.question.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = selectedCategory === 'All' || market.category === selectedCategory

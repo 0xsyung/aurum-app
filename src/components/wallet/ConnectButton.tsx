@@ -1,3 +1,4 @@
+// Wallet + auth UI using Privy.
 import { usePrivy, useWallets, useLoginWithPasskey } from '@privy-io/react-auth'
 import { Wallet, LogOut, ChevronDown, KeyRound } from 'lucide-react'
 import { useState } from 'react'
@@ -6,16 +7,22 @@ import { useState } from 'react'
  * ConnectButton - Auth + wallet connection UI (Privy)
  */
 export function ConnectButton() {
+  // Privy auth state + actions.
   const { ready, authenticated, login, logout } = usePrivy()
+  // Connected wallet list (first one is treated as primary).
   const { wallets } = useWallets()
+  // Passkey login shortcut.
   const { loginWithPasskey } = useLoginWithPasskey()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
+  // Primary wallet for display.
   const primaryWallet = wallets[0]
   const address = primaryWallet?.address
 
+  // Format address to a short label.
   const formatAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`
 
+  // If authenticated, show address + disconnect menu.
   if (authenticated) {
     return (
       <div className="relative">
@@ -48,6 +55,7 @@ export function ConnectButton() {
     )
   }
 
+  // If not authenticated, offer Sign In and Passkey.
   return (
     <div className="flex items-center gap-2">
       <button

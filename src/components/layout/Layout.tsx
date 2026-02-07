@@ -1,12 +1,15 @@
+// App layout shell with header/nav and content region.
 import { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ConnectButton } from '@/components/wallet/ConnectButton'
 import { TrendingUp, LayoutGrid, Briefcase, Plus } from 'lucide-react'
 
+// Props contract for the layout wrapper.
 interface LayoutProps {
   children: ReactNode
 }
 
+// Navigation definitions used in desktop + mobile menus.
 const navItems = [
   { path: '/', label: 'Markets', icon: LayoutGrid },
   { path: '/trending', label: 'Trending', icon: TrendingUp },
@@ -15,6 +18,7 @@ const navItems = [
 ]
 
 export function Layout({ children }: LayoutProps) {
+  // Current route for active link styling.
   const location = useLocation()
 
   return (

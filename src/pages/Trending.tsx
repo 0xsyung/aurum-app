@@ -1,7 +1,8 @@
+// Trending page with mock leaderboards.
 import { MarketCard, Market } from '@/components/market/MarketCard'
 import { Flame, TrendingUp, Clock } from 'lucide-react'
 
-// Mock trending data
+// Mock trending data (replace with API).
 const TRENDING_MARKETS: Market[] = [
   {
     id: '1',
@@ -27,6 +28,7 @@ const TRENDING_MARKETS: Market[] = [
   },
 ]
 
+// Mock 24h movers list.
 const TOP_MOVERS = [
   { id: '1', question: 'Will AI replace 10% of software jobs?', change: 12.5, direction: 'up' },
   { id: '2', question: 'Will Fed cut rates in Q1?', change: -8.3, direction: 'down' },
@@ -34,6 +36,7 @@ const TOP_MOVERS = [
   { id: '4', question: 'Will global EV sales exceed 50%?', change: -3.1, direction: 'down' },
 ]
 
+// Mock ending soon list.
 const ENDING_SOON = [
   { id: '1', question: 'Will BTC hit $80K this week?', endsIn: '2 hours', volume: '$45K' },
   { id: '2', question: 'Will ETH outperform BTC today?', endsIn: '5 hours', volume: '$23K' },
