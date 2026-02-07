@@ -1,10 +1,12 @@
+// Market detail page with trading controls and mock data.
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 import { ArrowLeft, Clock, Users, TrendingUp, Info, ExternalLink } from 'lucide-react'
 import { ConnectButton } from '@/components/wallet/ConnectButton'
+import { useX402Fetch } from '@/lib/x402'
 
-// Mock market data
+// Mock market data (replace with API/chain data).
 const MOCK_MARKET = {
   id: '1',
   question: 'Will Bitcoin reach $100,000 by end of 2026?',
@@ -27,23 +29,41 @@ type TradeType = 'buy' | 'sell'
 type Outcome = 'yes' | 'no'
 
 export function MarketDetail() {
+  // Route param for market ID (unused with mock data).
   const { id: _marketId } = useParams()
+  // Wallet connection state (used to gate trading).
   const { isConnected } = useAccount()
+  // x402 wrapper for paid API calls.
+  const { fetchWithPayment, ready: x402Ready } = useX402Fetch()
+  // Trade panel state.
   const [tradeType, setTradeType] = useState<TradeType>('buy')
   const [selectedOutcome, setSelectedOutcome] = useState<Outcome>('yes')
   const [amount, setAmount] = useState('')
 
-  const market = MOCK_MARKET // In production, fetch based on id
+  // In production, fetch by ID.
+  const market = MOCK_MARKET
 
-  // Calculate estimated return
+  // Calculate estimated return from the displayed price.
   const price = selectedOutcome === 'yes' ? market.outcomes[0].price : market.outcomes[1].price
   const shares = amount ? parseFloat(amount) / price : 0
   const potentialReturn = shares * 1 // Each share pays $1 if correct
   const profit = potentialReturn - parseFloat(amount || '0')
 
-  const handleTrade = () => {
-    // TODO: Implement actual trading logic with smart contracts
-    console.log('Trade:', { tradeType, selectedOutcome, amount })
+  const handleTrade = async () => {
+    // Placeholder: call a paid API endpoint (x402).
+    try {
+      if (!x402Ready) {
+        console.warn('x402 not ready: connect wallet first')
+        return
+      }
+      await fetchWithPayment('/api/paid/trade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tradeType, selectedOutcome, amount }),
+      })
+    } catch (err) {
+      console.error('x402 payment failed', err)
+    }
   }
 
   return (

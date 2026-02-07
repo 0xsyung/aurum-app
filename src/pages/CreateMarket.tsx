@@ -1,12 +1,16 @@
+// Create market UI (form only; no on-chain calls yet).
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { Plus, Trash2, Calendar, Info } from 'lucide-react'
 import { ConnectButton } from '@/components/wallet/ConnectButton'
 
+// Category options for the form.
 const CATEGORIES = ['Crypto', 'Economics', 'Technology', 'Science', 'Sports', 'Politics', 'Entertainment', 'Other']
 
 export function CreateMarket() {
+  // Wallet state to gate access to the form.
   const { isConnected } = useAccount()
+  // Form state.
   const [question, setQuestion] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
@@ -16,24 +20,28 @@ export function CreateMarket() {
   const [outcomes, setOutcomes] = useState(['', ''])
   const [initialLiquidity, setInitialLiquidity] = useState('')
 
+  // Add an outcome input (capped at 10).
   const addOutcome = () => {
     if (outcomes.length < 10) {
       setOutcomes([...outcomes, ''])
     }
   }
 
+  // Remove an outcome input (min 2).
   const removeOutcome = (index: number) => {
     if (outcomes.length > 2) {
       setOutcomes(outcomes.filter((_, i) => i !== index))
     }
   }
 
+  // Update a specific outcome input.
   const updateOutcome = (index: number, value: string) => {
     const newOutcomes = [...outcomes]
     newOutcomes[index] = value
     setOutcomes(newOutcomes)
   }
 
+  // Submit handler (placeholder).
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // TODO: Implement market creation with smart contracts
@@ -49,6 +57,7 @@ export function CreateMarket() {
     })
   }
 
+  // If not connected, show a gated prompt.
   if (!isConnected) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">

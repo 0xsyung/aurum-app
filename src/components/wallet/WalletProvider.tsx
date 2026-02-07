@@ -1,8 +1,11 @@
+// Wallet/auth provider composition (Privy + wagmi + React Query).
 import { WagmiProvider } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { PrivyProvider } from '@privy-io/react-auth'
 import { config } from '@/config/wagmi'
 import { ReactNode } from 'react'
 
+// Shared query client for async data caching.
 const queryClient = new QueryClient()
 
 interface WalletProviderProps {
@@ -12,29 +15,33 @@ interface WalletProviderProps {
 /**
  * WalletProvider - Abstraction layer for Web3 wallet connectivity
  * 
- * Currently uses Coinbase Smart Wallet via wagmi.
- * To add Privy or Dynamic in the future:
- * 1. Install the provider package
- * 2. Wrap children with the provider
- * 3. Update the useWallet hook to use the new provider's hooks
- * 
- * Example for Privy:
- * ```
- * import { PrivyProvider } from '@privy-io/react-auth'
- * 
- * <PrivyProvider appId="your-app-id">
- *   <WagmiProvider config={config}>
- *     {children}
- *   </WagmiProvider>
- * </PrivyProvider>
- * ```
+ * Uses Privy for auth (email/passkey + wallets) and wagmi for future on-chain calls.
  */
 export function WalletProvider({ children }: WalletProviderProps) {
+  // Privy app ID must be provided via env.
+  const privyAppId = import.meta.env.VITE_PRIVY_APP_ID as string | undefined
+
+  if (!privyAppId) {
+    throw new Error('Missing VITE_PRIVY_APP_ID')
+  }
+
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
-    </WagmiProvider>
+    // Privy handles auth + wallet connection UI.
+    <PrivyProvider
+      appId={privyAppId}
+      config={{
+        appearance: {
+          walletList: ['metamask', 'rabby_wallet', 'wallet_connect', 'coinbase_wallet'],
+        },
+      }}
+    >
+      {/* wagmi enables on-chain interactions */}
+      <WagmiProvider config={config}>
+        {/* React Query for caching */}
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </WagmiProvider>
+    </PrivyProvider>
   )
 }

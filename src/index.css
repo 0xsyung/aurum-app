@@ -1,5 +1,7 @@
+/* Tailwind base import */
 @import "tailwindcss";
 
+/* Design tokens (Tailwind v4 theme) */
 @theme {
   /* Aurum brand colors */
   --color-aurum-gold: #FFB81C;
