@@ -36,13 +36,12 @@
     "@privy-io/react-auth": "^1.87.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/react-query": "^5.90.20",
-    "@coinbase/x402": "^0.3.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
     "react-router-dom": "^6.28.0",
     "tailwind-merge": "^3.4.0",
     "viem": "^2.13.0",
     "wagmi": "^2.19",
-    "x402-fetch": "^0.2.2"
+    "x402-fetch": "^1.0.0"
   }
 }
