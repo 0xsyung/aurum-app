@@ -1,5 +1,6 @@
 import { WagmiProvider } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { PrivyProvider } from '@privy-io/react-auth'
 import { config } from '@/config/wagmi'
 import { ReactNode } from 'react'
 
@@ -12,29 +13,29 @@ interface WalletProviderProps {
 /**
  * WalletProvider - Abstraction layer for Web3 wallet connectivity
  * 
- * Currently uses Coinbase Smart Wallet via wagmi.
- * To add Privy or Dynamic in the future:
- * 1. Install the provider package
- * 2. Wrap children with the provider
- * 3. Update the useWallet hook to use the new provider's hooks
- * 
- * Example for Privy:
- * ```
- * import { PrivyProvider } from '@privy-io/react-auth'
- * 
- * <PrivyProvider appId="your-app-id">
- *   <WagmiProvider config={config}>
- *     {children}
- *   </WagmiProvider>
- * </PrivyProvider>
- * ```
+ * Uses Privy for auth (email/passkey + wallets) and wagmi for future on-chain calls.
  */
 export function WalletProvider({ children }: WalletProviderProps) {
+  const privyAppId = import.meta.env.VITE_PRIVY_APP_ID as string | undefined
+
+  if (!privyAppId) {
+    throw new Error('Missing VITE_PRIVY_APP_ID')
+  }
+
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
-    </WagmiProvider>
+    <PrivyProvider
+      appId={privyAppId}
+      config={{
+        appearance: {
+          walletList: ['metamask', 'rabby_wallet', 'wallet_connect', 'coinbase_wallet'],
+        },
+      }}
+    >
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </WagmiProvider>
+    </PrivyProvider>
   )
 }

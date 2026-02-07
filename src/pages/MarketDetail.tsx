@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 import { ArrowLeft, Clock, Users, TrendingUp, Info, ExternalLink } from 'lucide-react'
 import { ConnectButton } from '@/components/wallet/ConnectButton'
+import { useX402Fetch } from '@/lib/x402'
 
 // Mock market data
 const MOCK_MARKET = {
@@ -29,6 +30,7 @@ type Outcome = 'yes' | 'no'
 export function MarketDetail() {
   const { id: _marketId } = useParams()
   const { isConnected } = useAccount()
+  const { fetchWithPayment, ready: x402Ready } = useX402Fetch()
   const [tradeType, setTradeType] = useState<TradeType>('buy')
   const [selectedOutcome, setSelectedOutcome] = useState<Outcome>('yes')
   const [amount, setAmount] = useState('')
@@ -41,9 +43,21 @@ export function MarketDetail() {
   const potentialReturn = shares * 1 // Each share pays $1 if correct
   const profit = potentialReturn - parseFloat(amount || '0')
 
-  const handleTrade = () => {
-    // TODO: Implement actual trading logic with smart contracts
-    console.log('Trade:', { tradeType, selectedOutcome, amount })
+  const handleTrade = async () => {
+    // Placeholder: call a paid API endpoint (x402), then log trade
+    try {
+      if (!x402Ready) {
+        console.warn('x402 not ready: connect wallet first')
+        return
+      }
+      await fetchWithPayment('/api/paid/trade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tradeType, selectedOutcome, amount }),
+      })
+    } catch (err) {
+      console.error('x402 payment failed', err)
+    }
   }
 
   return (

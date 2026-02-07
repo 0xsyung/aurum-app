@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
+    "preinstall": "npm config set legacy-peer-deps true",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
@@ -33,6 +34,7 @@
   },
   "dependencies": {
     "@coinbase/onchainkit": "^0.30.0",
+    "@privy-io/react-auth": "^1.87.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/react-query": "^5.90.20",
     "clsx": "^2.1.1",
@@ -40,6 +42,7 @@
     "react-router-dom": "^6.28.0",
     "tailwind-merge": "^3.4.0",
     "viem": "^2.13.0",
-    "wagmi": "^2.19"
+    "wagmi": "^2.19",
+    "x402-fetch": "^1.0.0"
   }
 }
