@@ -1,9 +1,10 @@
+// Portfolio page (mock data + wallet gate).
 import { useAccount } from 'wagmi'
 import { Link } from 'react-router-dom'
 import { Wallet, TrendingUp, TrendingDown, ExternalLink } from 'lucide-react'
 import { ConnectButton } from '@/components/wallet/ConnectButton'
 
-// Mock portfolio data
+// Mock portfolio data (replace with API/chain data).
 const MOCK_POSITIONS = [
   {
     id: '1',
@@ -44,13 +45,15 @@ const MOCK_POSITIONS = [
 ]
 
 export function Portfolio() {
+  // Wallet connection state for gating access.
   const { isConnected } = useAccount()
 
-  // Calculate totals
+  // Aggregate totals for summary cards.
   const totalValue = MOCK_POSITIONS.reduce((sum, pos) => sum + pos.value, 0)
   const totalPnl = MOCK_POSITIONS.reduce((sum, pos) => sum + pos.pnl, 0)
   const totalPnlPercent = (totalPnl / (totalValue - totalPnl)) * 100
 
+  // If not connected, show a prompt.
   if (!isConnected) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">

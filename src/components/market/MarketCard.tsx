@@ -1,6 +1,8 @@
+// Market card summary used in list/grid views.
 import { Link } from 'react-router-dom'
 import { Clock, Users, TrendingUp } from 'lucide-react'
 
+// Data shape for a market item.
 export interface Market {
   id: string
   question: string
@@ -16,21 +18,24 @@ export interface Market {
   imageUrl?: string
 }
 
+// Component props for the card.
 interface MarketCardProps {
   market: Market
 }
 
 export function MarketCard({ market }: MarketCardProps) {
+  // Primary outcome for display (assumes first outcome is "Yes").
   const mainOutcome = market.outcomes[0]
   const yesProb = mainOutcome.probability
   const noProb = 100 - yesProb
 
-  // Calculate time remaining
+  // Calculate time remaining until the end date.
   const endDate = new Date(market.endDate)
   const now = new Date()
   const daysRemaining = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
 
   return (
+    // Card navigates to the market detail page.
     <Link
       to={`/market/${market.id}`}
       className="block bg-aurum-navy-light rounded-xl border border-aurum-gold/10 hover:border-aurum-gold/30 transition-all hover:shadow-lg hover:shadow-aurum-gold/5 overflow-hidden"
