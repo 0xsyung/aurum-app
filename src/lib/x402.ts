@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
 import { useWallets } from '@privy-io/react-auth'
-import { createWalletClient, custom, parseUnits } from 'viem'
+import { createWalletClient, custom, parseUnits, type Address } from 'viem'
 import { base, baseSepolia } from 'viem/chains'
 import { wrapFetchWithPayment } from 'x402-fetch'
+import type { Signer } from '@coinbase/x402'
 
 const chainId = Number(import.meta.env.VITE_CHAIN_ID ?? 84532)
 const chain = chainId === base.id ? base : baseSepolia
@@ -21,14 +22,16 @@ export function useX402Fetch() {
       }
 
       const provider = await wallet.getEthereumProvider()
+      const account = wallet.address as Address
       const walletClient = createWalletClient({
-        account: wallet.address,
+        account,
         chain,
         transport: custom(provider),
       })
 
-      const paidFetch = wrapFetchWithPayment(fetch, walletClient, maxValue)
-      return paidFetch(input, init)
+      const paidFetch = wrapFetchWithPayment(fetch, walletClient as unknown as Signer, maxValue)
+      const requestInfo = input instanceof URL ? input.toString() : input
+      return paidFetch(requestInfo, init)
     },
     [ready, wallet],
   )
