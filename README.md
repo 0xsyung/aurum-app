@@ -7,6 +7,7 @@ UI prototype for the Aurum Labs prediction markets dApp. This repo focuses on pr
 - **Mock data only**: markets and trading flows are UI placeholders.
 - **No on-chain integration yet**: contract addresses in `.env.example` are not wired into the code.
 - **Auth**: Privy is integrated for email/passkey + wallet login.
+- **Wallet UI**: Coinbase connector is set up (see `src/config/wagmi.ts`).
 - **x402**: client wrapper exists (placeholder endpoint).
 
 ## Structure
