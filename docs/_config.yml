@@ -1,0 +1,5 @@
+title: Aurum App
+description: Aurum web app docs placeholder for GitHub Pages.
+theme: jekyll-theme-primer
+plugins:
+  - jekyll-seo-tag
