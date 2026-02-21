@@ -25,12 +25,10 @@ export function ConnectButton() {
           className="flex items-center gap-2 px-4 py-2 bg-aurum-navy-light rounded-lg border border-aurum-gold/20 hover:border-aurum-gold/40 transition-colors"
         >
           <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-          <span className="text-white font-medium">
-            {address ? formatAddress(address) : 'Account'}
-          </span>
+          <span className="text-white font-medium">{address ? formatAddress(address) : 'Account'}</span>
           <ChevronDown className="w-4 h-4 text-gray-400" />
         </button>
-        
+
         {isDropdownOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-aurum-navy-light rounded-lg border border-aurum-gold/20 shadow-xl z-50">
             <button
@@ -49,7 +47,6 @@ export function ConnectButton() {
     )
   }
 
-  // If not authenticated, offer Sign In and Passkey.
   return (
     <div className="flex items-center gap-2">
       <button
