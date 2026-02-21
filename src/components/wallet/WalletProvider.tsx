@@ -1,4 +1,4 @@
-// Wallet/auth provider composition (wagmi + React Query).
+// Wallet provider composition (wagmi + React Query).
 import { WagmiProvider } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { config } from '@/config/wagmi'
@@ -12,9 +12,7 @@ interface WalletProviderProps {
 }
 
 /**
- * WalletProvider - Abstraction layer for Web3 wallet connectivity
- * 
- * Uses wagmi for on-chain calls.
+ * WalletProvider - Abstraction layer for Web3 wallet connectivity.
  */
 export function WalletProvider({ children }: WalletProviderProps) {
   return (
