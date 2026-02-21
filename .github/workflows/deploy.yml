@@ -3,12 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - main
-      - develop
-  pull_request:
-    branches:
-      - main
-      - develop
+      - "**"
 
 # Allow only one concurrent deployment
 concurrency:
@@ -58,44 +53,12 @@ jobs:
           path: dist/
           retention-days: 1
 
-  # Deploy to GitHub Pages (develop branch - testing/demo)
-  deploy-github-pages:
-    name: Deploy to GitHub Pages (Testing/Demo)
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload to GitHub Pages
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-  # Deploy to Cloudflare Pages (main branch - production)
+  # Deploy to Cloudflare Pages (all branches)
   deploy-cloudflare:
-    name: Deploy to Cloudflare Pages (Production)
+    name: Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push'
     permissions:
       contents: read
       deployments: write
@@ -106,16 +69,9 @@ jobs:
           name: dist
           path: dist/
           
-      - name: List Cloudflare Pages projects (debug)
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages project list
-    
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=aurum-app
+          command: pages deploy dist --project-name=aurum-app --branch=${{ github.ref_name }}
