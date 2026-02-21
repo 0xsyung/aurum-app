@@ -1,21 +1,18 @@
 // wagmi configuration for EVM chains and wallet connectors.
 import { http, createConfig } from 'wagmi'
 import { baseSepolia, base } from 'wagmi/chains'
-import { coinbaseWallet } from 'wagmi/connectors'
+import { metaMask } from 'wagmi/connectors'
 
-// Coinbase Smart Wallet configuration
-// This setup allows easy addition of other providers (Privy, Dynamic) in the future
 // Core wagmi config: chains, connectors, transports.
 export const config = createConfig({
   // Supported chains (testnet + mainnet)
   chains: [baseSepolia, base],
   // Wallet connectors used by wagmi
   connectors: [
-    coinbaseWallet({
-      appName: 'Aurum',
-      // preference: 'smartWalletOnly', // Use Smart Wallet by default
-      // preference: 'all',
-      preference: 'eoaOnly',
+    metaMask({
+      dappMetadata: {
+        name: 'Aurum',
+      },
     }),
   ],
   // RPC transports per chain
