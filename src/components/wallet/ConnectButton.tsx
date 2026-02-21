@@ -12,7 +12,7 @@ export function ConnectButton() {
   const { disconnect } = useDisconnect()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-  const metaMaskConnector = connectors.find((connector) => connector.id === 'metaMask')
+  const walletConnector = connectors[0]
 
   // Format address to a short label.
   const formatAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`
@@ -51,15 +51,15 @@ export function ConnectButton() {
     <div className="flex items-center gap-2">
       <button
         onClick={() => {
-          if (metaMaskConnector) {
-            connect({ connector: metaMaskConnector })
+          if (walletConnector) {
+            connect({ connector: walletConnector })
           }
         }}
-        disabled={!metaMaskConnector || isPending}
+        disabled={!walletConnector || isPending}
         className="flex items-center gap-2 px-6 py-2.5 bg-aurum-gold text-aurum-navy font-semibold rounded-lg hover:bg-aurum-gold-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Wallet className="w-5 h-5" />
-        {isPending ? 'Connecting...' : 'Connect MetaMask'}
+        {isPending ? 'Connecting...' : 'Connect Wallet'}
       </button>
     </div>
   )
